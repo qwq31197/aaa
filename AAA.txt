@@ -1,0 +1,13 @@
+ select *  from CompanyService where /*目前公司有幾個渠道*/
+  CompanyService.ServiceType='FP002'
+  AND  CompanyService.CurrencyType='CNY'
+  AND CompanyService.State=0
+  AND  NOT EXISTS (
+  SELECT *
+  FROM GPayRelation G 
+  LEFT JOIN ProviderService P ON G.ProviderCode = P.ProviderCode 
+  AND G.ServiceType = P.ServiceType 
+  AND G.CurrencyType = P.CurrencyType 
+  WHERE
+    G.CurrencyType = CompanyService.CurrencyType AND G.forCompanyID = CompanyService.forCompanyID  AND G.ServiceType = CompanyService.ServiceType AND P.State = 0   
+  )
